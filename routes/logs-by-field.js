@@ -39,6 +39,10 @@ function buildESQuery(req) {
     bodyBuilder = bodyBuilder.filter('term', 'user_name', req.query.user_name);
   }
 
+  if (req.query.connection !== undefined) {
+    bodyBuilder = bodyBuilder.filter('term', 'connection', req.query.connection);
+  }
+
   return bodyBuilder.build();
 }
 
