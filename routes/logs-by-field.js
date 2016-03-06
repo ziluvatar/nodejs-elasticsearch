@@ -2,6 +2,7 @@ var config = require('config');
 var esClient = require('../support/es-client');
 var esIndex = config.get('elasticsearch.index');
 var esType = config.get('elasticsearch.type');
+var pageSize = config.get('api.pageSize');
 var BodyBuilder = require('bodybuilder');
 
 function getEntriesByField(req, res) {
@@ -10,7 +11,7 @@ function getEntriesByField(req, res) {
       start: 0,
       total: data.hits.total,
       length: data.hits.hits.length,
-      limit: data.hits.hits.length,
+      limit: pageSize,
       logs: data.hits.hits.map(h => h._source)
     });
   }
@@ -31,7 +32,7 @@ function getEntriesByField(req, res) {
 }
 
 function buildESQuery(req) {
-  var bodyBuilder = new BodyBuilder();
+  var bodyBuilder = new BodyBuilder().size(pageSize);
   bodyBuilder = bodyBuilder.filter('term','client_id',req.user.aud);
 
   if (req.query.user_name !== undefined) {
