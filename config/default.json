@@ -1,0 +1,11 @@
+{
+  "server": {
+    "port": 3000
+  },
+  "elasticsearch": {
+    "host": "http://localhost:9200",
+    "log": "error",
+    "index": "logs",
+    "type": "entry"
+  }
+}

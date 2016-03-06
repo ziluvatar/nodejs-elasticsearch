@@ -1,0 +1,9 @@
+{
+  "server": {
+    "port": 3001
+  },
+  "elasticsearch": {
+    "index": "test-logs",
+    "log": "trace"
+  }
+}
