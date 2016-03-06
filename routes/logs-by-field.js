@@ -5,6 +5,12 @@ var esType = config.get('elasticsearch.type');
 var pageSize = config.get('api.pageSize');
 var BodyBuilder = require('bodybuilder');
 
+const fieldsMapping = {
+  user_name: 'user_name',
+  connection: 'connection',
+  user_id: 'user_id'
+};
+
 function getEntriesByField(req, res) {
   function searchResolve(data) {
     res.json({
@@ -35,12 +41,10 @@ function buildESQuery(req) {
   var bodyBuilder = new BodyBuilder().size(pageSize).sort('date','desc');
   bodyBuilder = bodyBuilder.filter('term','client_id',req.user.aud);
 
-  if (req.query.user_name !== undefined) {
-    bodyBuilder = bodyBuilder.filter('term', 'user_name', req.query.user_name);
-  }
-
-  if (req.query.connection !== undefined) {
-    bodyBuilder = bodyBuilder.filter('term', 'connection', req.query.connection);
+  for (var field in fieldsMapping) {
+    if (fieldsMapping.hasOwnProperty(field) && req.query[field] !== undefined) {
+      bodyBuilder = bodyBuilder.filter('term', fieldsMapping[field], req.query[field]);
+    }
   }
 
   return bodyBuilder.build();
