@@ -3,6 +3,7 @@ var request = require("supertest");
 var app = require('../../app');
 var elasticsearch = require('elasticsearch');
 var config = require('config');
+var tokenBuilder = require('../util/token-builder');
 
 var client = new elasticsearch.Client({
   host: config.get('elasticsearch.host'),
@@ -31,6 +32,7 @@ describe('GET /logs/{id}', function() {
     request(app)
       .get('/logs/1')
       .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer ' + tokenBuilder.validToken())
       .expect(200)
       .expect('Content-Type', 'application/json; charset=utf-8')
       .end(function(err, res){
@@ -39,10 +41,23 @@ describe('GET /logs/{id}', function() {
       });
   });
 
+  it('returns 401 http error code when there is a problem with the JWT used', function(done) {
+    request(app)
+      .get('/logs/1')
+      .set('Accept', 'application/json')
+      .expect(401)
+      .expect('Content-Type', 'application/json; charset=utf-8')
+      .end(function(err, res) {
+        expect(res.body).to.eql({ error: { code: "credentials_required", message: "No authorization token was found" } });
+        done(err);
+      });
+  });
+
   it('returns 404 http error code when entry is not found', function(done) {
     request(app)
       .get('/logs/2')
       .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer ' + tokenBuilder.validToken())
       .expect(404)
       .end(done);
   });

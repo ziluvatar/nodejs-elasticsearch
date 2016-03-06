@@ -4,6 +4,12 @@
   },
   "elasticsearch": {
     "index": "test-logs",
-    "log": "trace"
+    "log": "error"
+  },
+  "api": {
+    "security": {
+      "auth-client-id": "client-id-1",
+      "auth-client-secret": "YWJjZA=="
+    }
   }
 }

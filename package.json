@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "jsonwebtoken": "^5.7.0",
     "mocha": "2.4.5",
     "supertest": "1.2.0"
   }

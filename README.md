@@ -7,7 +7,15 @@ This is an example of building a NodeJS Rest API to access to logs which are sto
 
 # How to use it?
 
-Previously, you need to install elasticsearch (I used v2.2)
+Pre-requisites:
+
+* Install elasticsearch (I used v2.2)
+* Create an app in [Auth0](http://www.auth0.com) and set these environment variables (only to run it, you don't need this for testing):
+
+```
+AUTH0_CLIENT_ID=myAppClientId
+AUTH0_CLIENT_SECRET=myAppClientSecret
+```
 
 You can configure where it is in `config/default.json`, by default it will use `http://localhost:9200`
 

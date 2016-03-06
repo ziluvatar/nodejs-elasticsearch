@@ -1,0 +1,8 @@
+{
+  "api": {
+    "security": {
+      "auth-client-id": "AUTH0_CLIENT_ID",
+      "auth-client-secret": "AUTH0_CLIENT_SECRET"
+    }
+  }
+}
