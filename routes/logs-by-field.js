@@ -32,7 +32,7 @@ function getEntriesByField(req, res) {
 }
 
 function buildESQuery(req) {
-  var bodyBuilder = new BodyBuilder().size(pageSize);
+  var bodyBuilder = new BodyBuilder().size(pageSize).sort('date','desc');
   bodyBuilder = bodyBuilder.filter('term','client_id',req.user.aud);
 
   if (req.query.user_name !== undefined) {

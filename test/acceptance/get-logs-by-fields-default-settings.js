@@ -21,7 +21,7 @@ describe('GET /logs?{fields}', function() {
     store.drop(done);
   });
 
-  it('returns all client entries when searching without any field param', function(done) {
+  it('returns all client entries default sorted (date descending) when searching without any query param', function(done) {
     request(app)
       .get('/logs')
       .set('Accept', 'application/json')
@@ -34,9 +34,9 @@ describe('GET /logs?{fields}', function() {
         expect(res.body).to.have.property('length').and.be.equal(3);
         expect(res.body).to.have.property('limit').and.be.equal(3);
         expect(res.body).to.have.property('logs').and.deep.equal([
+          buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
           buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'user2' }),
-          buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' })
+          buildLogEntry({ user_name: 'user2' })
         ]);
         done(err);
       });
@@ -56,9 +56,9 @@ describe('GET /logs?{fields}', function() {
           expect(res.body).to.have.property('length').and.be.equal(3);
           expect(res.body).to.have.property('limit').and.be.equal(3);
           expect(res.body).to.have.property('logs').and.deep.equal([
-            buildLogEntry(),
+            buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
             buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' }),
-            buildLogEntry({ user_name: 'user2' })
+            buildLogEntry()
           ]);
           done(err);
         });
@@ -78,8 +78,8 @@ describe('GET /logs?{fields}', function() {
         expect(res.body).to.have.property('length').and.be.equal(2);
         expect(res.body).to.have.property('limit').and.be.equal(3);
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' })
+          buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -110,7 +110,7 @@ function buildLogEntry(ext) {
   var extension = ext || {};
   return {
     type: extension.type || 'ss',
-    date: extension.date || '2016-02-23T19:57:29.532Z',
+    date: extension.date || '2016-01-01T00:00:00.000Z',
     client_id: extension.client_id || config.get('api.security.auth-client-id'),
     client_name: "My application Name",
     ip: extension.ip || "190.254.209.19",
