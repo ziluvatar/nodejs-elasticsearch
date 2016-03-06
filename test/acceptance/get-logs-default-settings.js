@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var validGetRequest = require('../util/request').validGetRequest;
+var request = require('../util/request');
 var store = require('../util/store');
 var buildLogEntry = store.buildEntry;
 
@@ -20,7 +20,7 @@ describe('GET /logs', function() {
   });
 
   it('returns all client entries default sorted (date descending) when searching without any query param', function(done) {
-    validGetRequest('/logs')
+    request.validGet('/logs')
       .end(function(err, res){
         expect(res.body).to.have.property('start').and.be.equal(0);
         expect(res.body).to.have.property('total').and.be.equal(3);
@@ -37,7 +37,7 @@ describe('GET /logs', function() {
 
   it('returns first page when there are more results than default page size', function(done) {
     store.save([buildLogEntry()], function() {
-      validGetRequest('/logs')
+      request.validGet('/logs')
         .end(function(err, res){
           expect(res.body).to.have.property('start').and.be.equal(0);
           expect(res.body).to.have.property('total').and.be.equal(4);
@@ -51,6 +51,10 @@ describe('GET /logs', function() {
           done(err);
         });
     });
+  });
+
+  it('returns 401 http error code when there is a problem with the JWT used', function(done) {
+    request.unauthorizedGet('/logs').end(done);
   });
 
 });

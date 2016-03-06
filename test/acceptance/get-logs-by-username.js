@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var basicGetRequest = require('../util/request').validGetRequest;
+var request = require('../util/request');
 var store = require('../util/store');
 var buildLogEntry = store.buildEntry;
 
@@ -20,7 +20,7 @@ describe('GET /logs?{username}', function() {
   });
 
   it('returns client entries searching by username when it exists', function(done) {
-    basicGetRequest('/logs?user_name=user1')
+    request.validGet('/logs?user_name=user1')
       .end(function(err, res){
         expect(res.body).to.have.property('start').and.be.equal(0);
         expect(res.body).to.have.property('total').and.be.equal(2);
@@ -35,7 +35,7 @@ describe('GET /logs?{username}', function() {
   });
 
   it('does not return entries by username when there are not logs for that user', function(done) {
-    basicGetRequest('/logs?user_name=user3')
+    request.validGet('/logs?user_name=user3')
       .end(function(err, res){
         expect(res.body).to.have.property('start').and.be.equal(0);
         expect(res.body).to.have.property('total').and.be.equal(0);
@@ -44,6 +44,10 @@ describe('GET /logs?{username}', function() {
         expect(res.body).to.have.property('logs').and.be.empty;
         done(err);
       });
+  });
+
+  it('returns 401 http error code when there is a problem with the JWT used', function(done) {
+    request.unauthorizedGet('/logs?user_name=user1').end(done);
   });
 
 });
