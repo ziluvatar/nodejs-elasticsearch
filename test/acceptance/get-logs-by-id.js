@@ -1,40 +1,26 @@
 var expect = require('chai').expect;
 var request = require("supertest");
 var app = require('../../app');
-var elasticsearch = require('elasticsearch');
 var config = require('config');
 var tokenBuilder = require('../util/token-builder');
 
-var client = new elasticsearch.Client({
-  host: config.get('elasticsearch.host'),
-  log: config.get('elasticsearch.log')
-});
-var esIndex = config.get('elasticsearch.index');
-var esType = config.get('elasticsearch.type');
+var validGetRequest = require('../util/request').validGetRequest;
+var store = require('../util/store');
+var buildLogEntry = store.buildEntry;
+
 
 describe('GET /logs/{id}', function() {
 
-  before(function (done) {
-    client.bulk({
-      body: [
-        { delete: { _index: esIndex, _type: esType, _id: 1 } },
-        { index:  { _index: esIndex, _type: esType, _id: 1 } },
-        buildLogEntry()
-      ]
-    }, done);
+  beforeEach(function (done) {
+    store.save([buildLogEntry()], done);
   });
 
-  after(function (done) {
-    client.delete({ index: esIndex, type: esType, id: '1' }, done);
+  afterEach(function (done) {
+    store.drop(done);
   });
 
   it('returns an entry when it exists', function(done) {
-    request(app)
-      .get('/logs/1')
-      .set('Accept', 'application/json')
-      .set('Authorization', 'Bearer ' + tokenBuilder.validToken())
-      .expect(200)
-      .expect('Content-Type', 'application/json; charset=utf-8')
+    validGetRequest('/logs/1')
       .end(function(err, res){
         expect(res.body).to.eql(buildLogEntry());
         done(err);
@@ -63,15 +49,3 @@ describe('GET /logs/{id}', function() {
   });
 
 });
-
-function buildLogEntry() {
-  return {
-    type: 'ss',
-    date: '2016-02-23T19:57:29.532Z',
-    client_id: "AaiyAPdpYdesoKnqjj8HJqRn4T5titww",
-    client_name: "My application Name",
-    ip: "190.254.209.19",
-    details: {},
-    user_id: "auth0|56c75c4e42b6359e98374bc2"
-  };
-}

@@ -30,5 +30,21 @@ module.exports = {
       operations.push({delete: {_index: esIndex, _type: esType, _id: sequence}});
     }
     client.bulk({ refresh: true, body: operations }, cb);
+  },
+  buildEntry: function (ext) {
+    var extension = ext || {};
+    return {
+      type: extension.type || 'ss',
+      date: extension.date || '2016-01-01T00:00:00.000Z',
+      client_id: extension.client_id || config.get('api.security.auth-client-id'),
+      client_name: "My application Name",
+      ip: extension.ip || "190.254.209.19",
+      details: {},
+      user_id: extension.user_id || "auth0|56c75c4e42b6359e98374bc2",
+      user_name: extension.user_name || "myuser",
+      connection: extension.connection || "connection1",
+      user_agent: extension.user_agent || "userAgent1"
+    };
   }
+
 };
