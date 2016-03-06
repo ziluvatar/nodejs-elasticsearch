@@ -8,7 +8,8 @@ var BodyBuilder = require('bodybuilder');
 const fieldsMapping = {
   user_name: 'user_name',
   connection: 'connection',
-  user_id: 'user_id'
+  user_id: 'user_id',
+  ip: 'ip'
 };
 
 function getEntriesByField(req, res) {
