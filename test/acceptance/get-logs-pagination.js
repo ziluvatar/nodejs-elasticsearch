@@ -57,6 +57,15 @@ describe('GET /logs?{start,limit}', function() {
       });
   });
 
+  it('returns empty page when there are not more results with that "start" position', function(done) {
+    request.validGet('/logs?start=15')
+      .end(function(err, res){
+        expect(res.body).to.include({ start: 15, limit: 3, length: 0, total: 4 });
+        expect(res.body).to.have.property('logs').and.be.empty;
+        done(err);
+      });
+  });
+
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
     request.unauthorizedGet('/logs?start=0&limit=1').end(done);
   });
