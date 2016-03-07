@@ -12,13 +12,31 @@ const fieldsMapping = {
   ip: 'ip'
 };
 
+function sanitizeOptions(req) {
+  return {
+    pagination: {
+      start: parseInt(req.query.start || 0),
+      pageSize: parseInt(req.query.limit || pageSize)
+    },
+    security: {
+      client_id: req.user.aud
+    },
+    user_name: req.query.user_name,
+    connection: req.query.connection,
+    user_id: req.query.user_id,
+    ip: req.query.ip
+  }
+}
+
 function getEntriesByField(req, res) {
+  var options = sanitizeOptions(req);
+
   function searchResolve(data) {
     res.json({
-      start: 0,
+      start: options.pagination.start,
       total: data.hits.total,
       length: data.hits.hits.length,
-      limit: pageSize,
+      limit: options.pagination.pageSize,
       logs: data.hits.hits.map(h => h._source)
     });
   }
@@ -32,19 +50,22 @@ function getEntriesByField(req, res) {
     .search({
       index: esIndex,
       type: esType,
-      body: buildESQuery(req)
+      body: buildESQuery(options)
     })
     .then(searchResolve)
     .catch(searchReject);
 }
 
-function buildESQuery(req) {
-  var bodyBuilder = new BodyBuilder().size(pageSize).sort('date','desc');
-  bodyBuilder = bodyBuilder.filter('term','client_id',req.user.aud);
+function buildESQuery(options) {
+  var bodyBuilder = new BodyBuilder()
+    .filter('term','client_id',options.security.client_id)
+    .size(options.pagination.pageSize)
+    .from(options.pagination.start)
+    .sort('date','desc');
 
   for (var field in fieldsMapping) {
-    if (fieldsMapping.hasOwnProperty(field) && req.query[field] !== undefined) {
-      bodyBuilder = bodyBuilder.filter('term', fieldsMapping[field], req.query[field]);
+    if (fieldsMapping.hasOwnProperty(field) && options[field] !== undefined) {
+      bodyBuilder = bodyBuilder.filter('term', fieldsMapping[field], options[field]);
     }
   }
 

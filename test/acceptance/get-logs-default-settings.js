@@ -35,24 +35,6 @@ describe('GET /logs', function() {
       });
   });
 
-  it('returns first page when there are more results than default page size', function(done) {
-    store.save([buildLogEntry()], function() {
-      request.validGet('/logs')
-        .end(function(err, res){
-          expect(res.body).to.have.property('start').and.be.equal(0);
-          expect(res.body).to.have.property('total').and.be.equal(4);
-          expect(res.body).to.have.property('length').and.be.equal(3);
-          expect(res.body).to.have.property('limit').and.be.equal(3);
-          expect(res.body).to.have.property('logs').and.deep.equal([
-            buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
-            buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' }),
-            buildLogEntry()
-          ]);
-          done(err);
-        });
-    });
-  });
-
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
     request.unauthorizedGet('/logs').end(done);
   });
