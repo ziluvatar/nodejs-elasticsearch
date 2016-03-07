@@ -14,7 +14,7 @@ const fieldsMapping = {
 };
 
 function buildOptions(req) {
-  return {
+  var options = {
     pagination: {
       start: parseInt(req.query.start || 0),
       pageSize: parseInt(req.query.limit || pageSize)
@@ -26,11 +26,22 @@ function buildOptions(req) {
     security: {
       client_id: req.user.aud
     },
+    response: {},
     user_name: req.query.user_name,
     connection: req.query.connection,
     user_id: req.query.user_id,
     ip: req.query.ip
+  };
+  if (req.query.fields) {
+    var fieldList = req.query.fields.split(',');
+    if (req.query.exclude_fields === 'true') {
+      options.response.excludeFields = fieldList;
+    } else {
+      options.response.includeFields = fieldList;
+    }
   }
+
+  return options
 }
 
 function validateInput(req) {
@@ -56,7 +67,9 @@ function getEntriesByField(req, res) {
     .search({
       index: esIndex,
       type: esType,
-      body: buildESQuery(options)
+      body: buildESQuery(options),
+      _sourceInclude: options.response.includeFields,
+      _sourceExclude: options.response.excludeFields
     })
     .then(function(data) {
       res.json({
