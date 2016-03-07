@@ -22,6 +22,7 @@ describe('GET /logs?{user_id}', function() {
   it('returns client entries searching by user_id when it exists', function(done) {
     request.validGet('/logs?user_id=u1')
       .end(function(err, res){
+        expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('start').and.be.equal(0);
         expect(res.body).to.have.property('total').and.be.equal(2);
         expect(res.body).to.have.property('length').and.be.equal(2);
@@ -37,6 +38,7 @@ describe('GET /logs?{user_id}', function() {
   it('does not return entries by connection when there are not logs for that user', function(done) {
     request.validGet('/logs?user_id=u0')
       .end(function(err, res){
+        expect(res.body).to.include({ start: 0, limit: 3, length: 0, total: 0 });
         expect(res.body).to.have.property('start').and.be.equal(0);
         expect(res.body).to.have.property('total').and.be.equal(0);
         expect(res.body).to.have.property('length').and.be.equal(0);

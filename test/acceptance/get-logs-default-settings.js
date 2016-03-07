@@ -22,10 +22,7 @@ describe('GET /logs', function() {
   it('returns all client entries default sorted (date descending) when searching without any query param', function(done) {
     request.validGet('/logs')
       .end(function(err, res){
-        expect(res.body).to.have.property('start').and.be.equal(0);
-        expect(res.body).to.have.property('total').and.be.equal(3);
-        expect(res.body).to.have.property('length').and.be.equal(3);
-        expect(res.body).to.have.property('limit').and.be.equal(3);
+        expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 3 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
           buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' }),
