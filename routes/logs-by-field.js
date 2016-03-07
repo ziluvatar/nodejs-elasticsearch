@@ -26,6 +26,10 @@ function buildOptions(req) {
     security: {
       client_id: req.user.aud
     },
+    sort: {
+      field: fieldsMapping[req.query.sort] ? req.query.sort : 'date',
+      mode: req.query.mode === 'asc' ? 'asc' : 'desc'
+    },
     response: {},
     user_name: req.query.user_name,
     connection: req.query.connection,
@@ -91,7 +95,7 @@ function buildESQuery(options) {
     .filter('term','client_id',options.security.client_id)
     .size(options.pagination.pageSize)
     .from(options.pagination.start)
-    .sort('date','desc');
+    .sort(options.sort.field, options.sort.mode);
 
   for (var field in fieldsMapping) {
     if (fieldsMapping.hasOwnProperty(field) && options[field] !== undefined) {
