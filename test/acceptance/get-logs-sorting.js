@@ -63,15 +63,17 @@ describe('GET /logs?{sort,mode}', function() {
       });
   });
 
-  it('returns entries sorted by default order when "sort" is set to a field not available for sorting', function(done) {
-    request.validGet('/logs?sort=detail')
+  it('returns 400 error when "sort" field or "mode" are not valid', function(done) {
+    request.badGet('/logs?sort=detail&mode=wrong')
       .end(function(err, res){
         expect(err).to.be.null;
-        expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
-        expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'a', date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
+        expect(res.body).to.have.property('errors').and.deep.equal([
+          { code: 'invalid.param.sort',
+            message: 'sort fields: date, user_name, connection, user_id, ip, client_name',
+            value: 'detail' },
+          { code: 'invalid.param.mode',
+            message: 'sort modes allowed: asc, desc',
+            value: 'wrong' }
         ]);
         done(err);
       });

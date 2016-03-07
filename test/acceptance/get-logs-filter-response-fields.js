@@ -57,6 +57,19 @@ describe('GET /logs?{fields,exclude_fields}', function() {
       });
   });
 
+  it('returns 400 error when "exclude_fields" field is not valid', function(done) {
+    request.badGet('/logs?exclude_fields=foo')
+      .end(function(err, res){
+        expect(err).to.be.null;
+        expect(res.body).to.have.property('errors').and.deep.equal([
+          { code: 'invalid.param.exclude_fields',
+            message: 'values allowed: true, false',
+            value: 'foo' }
+        ]);
+        done(err);
+      });
+  });
+
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
     request.unauthorizedGet('/logs?fields=user_name').end(done);
   });

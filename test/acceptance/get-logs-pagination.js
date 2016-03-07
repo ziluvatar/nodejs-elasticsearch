@@ -70,6 +70,28 @@ describe('GET /logs?{start,limit}', function() {
       });
   });
 
+  it('returns 400 if "start" has invalid format', function(done) {
+    request.badGet('/logs?start=a')
+      .end(function(err, res){
+        expect(err).to.be.null;
+        expect(res.body).to.have.property('errors').and.deep.equal([
+          { code: 'invalid.param.start', message: 'must be a number', value: 'a' }
+        ]);
+        done(err);
+      });
+  });
+
+  it('returns 400 if "limit" has invalid format', function(done) {
+    request.badGet('/logs?limit=b')
+      .end(function(err, res){
+        expect(err).to.be.null;
+        expect(res.body).to.have.property('errors').and.deep.equal([
+          { code: 'invalid.param.limit', message: 'must be a number', value: 'b' }
+        ]);
+        done(err);
+      });
+  });
+
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
     request.unauthorizedGet('/logs?start=0&limit=1').end(done);
   });

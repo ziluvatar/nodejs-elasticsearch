@@ -42,6 +42,19 @@ describe('GET /logs?{ip}', function() {
       });
   });
 
+  it('returns 400 error when "ip" field is not valid', function(done) {
+    request.badGet('/logs?ip=abcd')
+      .end(function(err, res){
+        expect(err).to.be.null;
+        expect(res.body).to.have.property('errors').and.deep.equal([
+          { code: 'invalid.param.ip',
+            message: 'invalid ip',
+            value: 'abcd' }
+        ]);
+        done(err);
+      });
+  });
+
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
     request.unauthorizedGet('/logs?ip=1.1.1.1').end(done);
   });

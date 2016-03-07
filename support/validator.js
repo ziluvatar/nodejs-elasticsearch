@@ -1,14 +1,24 @@
+var expressValidator = require('express-validator');
 var moment = require('moment');
 
-function isValidDate(dateString) {
-  return moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid()
+function isValidDate(param, format) {
+  return moment(param, format, true).isValid()
 }
 
-function isEmptyOrDate(dateString) {
-  return dateString === undefined || isValidDate(dateString);
+function normalizeErrors(validationErrors) {
+  return validationErrors.map(e => ({
+    code: 'invalid.param.' + e.param,
+    message: e.msg, value:e.value
+  }));
 }
+
+var validatorOptions = {
+  customValidators: {
+    isValidDate: isValidDate
+  }
+};
 
 module.exports = {
-  isValidDate: isValidDate,
-  isEmptyOrDate: isEmptyOrDate
+  normalizeErrors: normalizeErrors,
+  middleware: expressValidator(validatorOptions)
 };

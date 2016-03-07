@@ -80,8 +80,12 @@ describe('GET /logs?{from,to}', function() {
       .end(function(err, res){
         expect(err).to.be.null;
         expect(res.body).to.have.property('errors').and.deep.equal([
-          { code: 'invalid.param.from', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' },
-          { code: 'invalid.param.to', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' }
+          { code: 'invalid.param.from',
+            message: 'date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ',
+            value: 'aaaa' },
+          { code: 'invalid.param.to',
+            message: 'date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ',
+            value: '2016-02-20' }
         ]);
         done(err);
       });

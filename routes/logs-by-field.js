@@ -6,6 +6,10 @@ var pageSize = config.get('api.pageSize');
 var BodyBuilder = require('bodybuilder');
 var validator = require('../support/validator');
 
+const apiDateFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+const apiSortFields = ['date','user_name','connection','user_id','ip','client_name'];
+const apiSortModes = ['asc','desc'];
+
 const fieldsMapping = {
   user_name: 'user_name',
   connection: 'connection',
@@ -27,8 +31,8 @@ function buildOptions(req) {
       client_id: req.user.aud
     },
     sort: {
-      field: fieldsMapping[req.query.sort] ? req.query.sort : 'date',
-      mode: req.query.mode === 'asc' ? 'asc' : 'desc'
+      field: req.query.sort || 'date',
+      mode: req.query.mode || 'desc'
     },
     response: {},
     user_name: req.query.user_name,
@@ -49,14 +53,21 @@ function buildOptions(req) {
 }
 
 function validateInput(req) {
-  var errors = [];
-  if (!validator.isEmptyOrDate(req.query.from)) {
-    errors.push({ code: 'invalid.param.from', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' })
+  req.checkQuery('start', 'must be a number').optional().isInt();
+  req.checkQuery('limit', 'must be a number').optional().isInt();
+  req.checkQuery('from', 'date format invalid, expected: ' + apiDateFormat).optional().isValidDate(apiDateFormat);
+  req.checkQuery('to', 'date format invalid, expected: ' + apiDateFormat).optional().isValidDate(apiDateFormat);
+  req.checkQuery('sort', 'sort fields: ' + apiSortFields.join(', ')).optional().isIn(apiSortFields);
+  req.checkQuery('mode', 'sort modes allowed: ' + apiSortModes.join(', ')).optional().isIn(apiSortModes);
+  req.checkQuery('exclude_fields', 'values allowed: true, false').optional().isBoolean();
+  req.checkQuery('ip', 'invalid ip').optional().isIP();
+
+  var errors = req.validationErrors();
+  if (errors) {
+    return validator.normalizeErrors(errors);
+  } else {
+    return [];
   }
-  if (!validator.isEmptyOrDate(req.query.to)) {
-    errors.push({ code: 'invalid.param.to', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' })
-  }
-  return errors;
 }
 
 function getEntriesByField(req, res) {
