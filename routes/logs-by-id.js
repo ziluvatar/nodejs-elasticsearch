@@ -5,7 +5,11 @@ var esType = config.get('elasticsearch.type');
 
 function getEntryById(req, res) {
   function getResolve(data) {
-    res.json(data._source);
+    if (data._source.client_id === req.user.aud) {
+      res.json(data._source);
+    } else {
+      res.sendStatus(404);
+    }
   }
 
   function getReject(err) {
