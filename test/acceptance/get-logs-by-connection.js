@@ -22,6 +22,7 @@ describe('GET /logs?{connection}', function() {
   it('returns client entries searching by connection when it exists', function(done) {
     request.validGet('/logs?connection=c1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ connection: 'c1', date: '2016-02-23T00:00:00.000Z' }),
@@ -34,6 +35,7 @@ describe('GET /logs?{connection}', function() {
   it('does not return entries by connection when there are not logs for that user', function(done) {
     request.validGet('/logs?connection=c0')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 0, total: 0 });
         expect(res.body).to.have.property('logs').and.be.empty;
         done(err);

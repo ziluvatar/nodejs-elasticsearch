@@ -23,6 +23,7 @@ describe('GET /logs?{user_name,connection,ip,user_id}', function() {
   it('returns client entries searching by all fields', function(done) {
     request.validGet('/logs?connection=c1&user_name=un1&ip=1.1.1.1&user_id=u1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ connection: 'c1', user_name: 'un1', ip: '1.1.1.1', user_id: 'u1' })
@@ -34,6 +35,7 @@ describe('GET /logs?{user_name,connection,ip,user_id}', function() {
   it('does not return entries by connection when there are not logs for that user', function(done) {
     request.validGet('/logs?connection=c0&user_name=un1&ip=1.1.1.1&user_id=u1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 0, total: 0 });
         expect(res.body).to.have.property('logs').and.be.empty;
         done(err);

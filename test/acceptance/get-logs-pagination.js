@@ -23,6 +23,7 @@ describe('GET /logs?{start,limit}', function() {
   it('returns page with default limit when no "limit" is defined', function(done) {
     request.validGet('/logs?start=1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 1, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ date: '2016-02-22T00:00:00.000Z' }),
@@ -36,6 +37,7 @@ describe('GET /logs?{start,limit}', function() {
   it('returns page with first entry when no "start" is defined', function(done) {
     request.validGet('/logs?limit=1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 1, length: 1, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ date: '2016-02-23T00:00:00.000Z' })
@@ -47,6 +49,7 @@ describe('GET /logs?{start,limit}', function() {
   it('returns first page when neither "start" nor "limit" is defined', function(done) {
     request.validGet('/logs')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ date: '2016-02-23T00:00:00.000Z' }),
@@ -60,6 +63,7 @@ describe('GET /logs?{start,limit}', function() {
   it('returns empty page when there are not more results with that "start" position', function(done) {
     request.validGet('/logs?start=15')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 15, limit: 3, length: 0, total: 4 });
         expect(res.body).to.have.property('logs').and.be.empty;
         done(err);

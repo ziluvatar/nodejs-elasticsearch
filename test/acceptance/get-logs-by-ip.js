@@ -22,6 +22,7 @@ describe('GET /logs?{ip}', function() {
   it('returns client entries searching by ip when it exists', function(done) {
     request.validGet('/logs?ip=1.1.1.1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           buildLogEntry({ ip: '1.1.1.1', date: '2016-02-23T00:00:00.000Z' }),
@@ -34,6 +35,7 @@ describe('GET /logs?{ip}', function() {
   it('does not return entries by ip when there are not logs for that user', function(done) {
     request.validGet('/logs?ip=0.0.0.0')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 0, total: 0 });
         expect(res.body).to.have.property('logs').and.be.empty;
         done(err);

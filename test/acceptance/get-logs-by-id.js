@@ -18,6 +18,7 @@ describe('GET /logs/{id}', function() {
   it('returns a client entry when it exists', function(done) {
     request.validGet('/logs/1')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.eql(store.buildEntry());
         done(err);
       });

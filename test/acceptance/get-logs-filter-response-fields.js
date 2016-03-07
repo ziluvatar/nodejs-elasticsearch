@@ -20,6 +20,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
   it('returns only some fields when "fields" is set', function(done) {
     request.validGet('/logs?fields=user_name,connection')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           { user_name: 'myuser', connection: 'connection1' }
@@ -31,6 +32,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
   it('returns not excluded fields when "fields" is set and "exclude_fields" is true', function(done) {
     request.validGet('/logs?fields=user_name,connection&exclude_fields=true')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
 
         var entry = buildLogEntry();
@@ -46,6 +48,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
   it('returns only some fields when "fields" is set and "exclude_fields" is false', function(done) {
     request.validGet('/logs?fields=user_name,connection&exclude_fields=false')
       .end(function(err, res){
+        expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
           { user_name: 'myuser', connection: 'connection1' }
