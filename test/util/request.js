@@ -15,7 +15,7 @@ module.exports = {
     return request(app)
       .get(url)
       .set('Accept', 'application/json')
-      .expect(401, { error: { code: "credentials_required", message: "No authorization token was found" } })
+      .expect(401, { errors: [{ code: "credentials_required", message: "No authorization token was found" }] })
       .expect('Content-Type', 'application/json; charset=utf-8');
   },
   notFoundGet: function(url) {
@@ -24,5 +24,13 @@ module.exports = {
       .set('Accept', 'application/json')
       .set('Authorization', 'Bearer ' + tokenBuilder.validToken())
       .expect(404);
+  },
+  badGet: function (url) {
+    return request(app)
+      .get(url)
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer ' + tokenBuilder.validToken())
+      .expect(400)
+      .expect('Content-Type', 'application/json; charset=utf-8');
   }
 };

@@ -8,7 +8,7 @@ var authenticate = jwt({
 
 var unauthorizedErrorHandler = function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ error: { code: err.code, message: err.message }});
+    res.status(401).json({ errors: [{ code: err.code, message: err.message }] });
   } else {
     next(err);
   }

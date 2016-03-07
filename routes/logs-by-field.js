@@ -4,6 +4,7 @@ var esIndex = config.get('elasticsearch.index');
 var esType = config.get('elasticsearch.type');
 var pageSize = config.get('api.pageSize');
 var BodyBuilder = require('bodybuilder');
+var validator = require('../support/validator');
 
 const fieldsMapping = {
   user_name: 'user_name',
@@ -12,11 +13,15 @@ const fieldsMapping = {
   ip: 'ip'
 };
 
-function sanitizeOptions(req) {
+function buildOptions(req) {
   return {
     pagination: {
       start: parseInt(req.query.start || 0),
       pageSize: parseInt(req.query.limit || pageSize)
+    },
+    period: {
+      from: req.query.from,
+      to: req.query.to
     },
     security: {
       client_id: req.user.aud
@@ -28,23 +33,24 @@ function sanitizeOptions(req) {
   }
 }
 
+function validateInput(req) {
+  var errors = [];
+  if (!validator.isEmptyOrDate(req.query.from)) {
+    errors.push({ code: 'invalid.param.from', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' })
+  }
+  if (!validator.isEmptyOrDate(req.query.to)) {
+    errors.push({ code: 'invalid.param.to', message: 'Date format invalid, expected: YYYY-MM-DDTHH:mm:ss.SSSZ' })
+  }
+  return errors;
+}
+
 function getEntriesByField(req, res) {
-  var options = sanitizeOptions(req);
-
-  function searchResolve(data) {
-    res.json({
-      start: options.pagination.start,
-      total: data.hits.total,
-      length: data.hits.hits.length,
-      limit: options.pagination.pageSize,
-      logs: data.hits.hits.map(h => h._source)
-    });
+  var errors = validateInput(req);
+  if (errors.length > 0) {
+    return res.status(400).json({ errors: errors });
   }
 
-  function searchReject(err) {
-    res.sendStatus(500);
-    console.error(err);
-  }
+  var options = buildOptions(req);
 
   esClient
     .search({
@@ -52,8 +58,19 @@ function getEntriesByField(req, res) {
       type: esType,
       body: buildESQuery(options)
     })
-    .then(searchResolve)
-    .catch(searchReject);
+    .then(function(data) {
+      res.json({
+        start: options.pagination.start,
+        total: data.hits.total,
+        length: data.hits.hits.length,
+        limit: options.pagination.pageSize,
+        logs: data.hits.hits.map(h => h._source)
+      });
+    })
+    .catch(function(err) {
+      res.sendStatus(500);
+      console.error(err);
+    });
 }
 
 function buildESQuery(options) {
@@ -67,6 +84,13 @@ function buildESQuery(options) {
     if (fieldsMapping.hasOwnProperty(field) && options[field] !== undefined) {
       bodyBuilder = bodyBuilder.filter('term', fieldsMapping[field], options[field]);
     }
+  }
+
+  if (options.period.from !== undefined) {
+    bodyBuilder = bodyBuilder.filter('range', 'date', { "gte" : options.period.from });
+  }
+  if (options.period.to !== undefined) {
+    bodyBuilder = bodyBuilder.filter('range', 'date', { "lte" : options.period.to });
   }
 
   return bodyBuilder.build();
