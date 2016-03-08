@@ -1,4 +1,7 @@
 {
+  "server": {
+    "port": "PORT"
+  },
   "api": {
     "security": {
       "auth-client-id": "AUTH0_CLIENT_ID",
