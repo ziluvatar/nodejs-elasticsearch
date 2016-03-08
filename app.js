@@ -5,7 +5,9 @@ var logsById = require('./routes/logs-by-id').byId;
 var logsByFields = require('./routes/logs-by-field').byFields;
 var security = require('./middleware/security');
 var validator = require('./support/validator');
+var cors = require('cors');
 
+app.use(cors());
 app.use(validator.middleware);
 app.use('/logs', security.verify);
 
