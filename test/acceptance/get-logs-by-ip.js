@@ -25,8 +25,8 @@ describe('GET /logs?{ip}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ ip: '1.1.1.1', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ ip: '1.1.1.1', date: '2016-02-21T00:00:00.000Z' })
+          buildLogEntry({ id: "3", ip: '1.1.1.1', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "1", ip: '1.1.1.1', date: '2016-02-21T00:00:00.000Z' })
         ]);
         done(err);
       });

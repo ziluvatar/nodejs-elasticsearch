@@ -31,8 +31,8 @@ describe('GET /logs?{from,to}', function() {
         expect(res.body).to.have.property('length').and.be.equal(2);
         expect(res.body).to.have.property('limit').and.be.equal(3);
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ date: '2016-02-22T00:00:00.000Z' })
+          buildLogEntry({ id: "2", date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "3", date: '2016-02-22T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -44,8 +44,8 @@ describe('GET /logs?{from,to}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ date: '2016-02-20T00:00:00.000Z' })
+          buildLogEntry({ id: "3", date: '2016-02-22T00:00:00.000Z' }),
+          buildLogEntry({ id: "5", date: '2016-02-20T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -57,9 +57,9 @@ describe('GET /logs?{from,to}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 3 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ date: recentDateTime }),
-          buildLogEntry({ date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ date: '2016-02-22T00:00:00.000Z' })
+          buildLogEntry({ id: "1", date: recentDateTime }),
+          buildLogEntry({ id: "2", date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "3", date: '2016-02-22T00:00:00.000Z' })
         ]);
         done(err);
       });

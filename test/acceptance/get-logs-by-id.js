@@ -19,7 +19,7 @@ describe('GET /logs/{id}', function() {
     request.validGet('/logs/1')
       .end(function(err, res){
         expect(err).to.be.null;
-        expect(res.body).to.eql(store.buildEntry());
+        expect(res.body).to.eql(store.buildEntry({ id: "1" }));
         done(err);
       });
   });

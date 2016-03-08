@@ -23,7 +23,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          { user_name: 'myuser', connection: 'connection1' }
+          { id: "1", user_name: 'myuser', connection: 'connection1' }
         ]);
         done(err);
       });
@@ -35,7 +35,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
 
-        var entry = buildLogEntry();
+        var entry = buildLogEntry({ id: "1" });
         delete entry.user_name;
         delete entry.connection;
         expect(res.body).to.have.property('logs').and.deep.equal([
@@ -51,7 +51,7 @@ describe('GET /logs?{fields,exclude_fields}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          { user_name: 'myuser', connection: 'connection1' }
+          { id: "1", user_name: 'myuser', connection: 'connection1' }
         ]);
         done(err);
       });

@@ -6,7 +6,9 @@ var esType = config.get('elasticsearch.type');
 function getEntryById(req, res) {
   function getResolve(data) {
     if (data._source.client_id === req.user.aud) {
-      res.json(data._source);
+      var output = { id: data._id };
+      Object.assign(output, data._source);
+      res.json(output);
     } else {
       res.sendStatus(404);
     }

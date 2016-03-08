@@ -26,7 +26,7 @@ describe('GET /logs?{user_name,connection,ip,user_id}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 1, total: 1 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ connection: 'c1', user_name: 'un1', ip: '1.1.1.1', user_id: 'u1' })
+          buildLogEntry({ id: "1", connection: 'c1', user_name: 'un1', ip: '1.1.1.1', user_id: 'u1' })
         ]);
         done(err);
       });

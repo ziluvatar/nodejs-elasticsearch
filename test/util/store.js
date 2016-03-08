@@ -33,7 +33,7 @@ module.exports = {
   },
   buildEntry: function (ext) {
     var extension = ext || {};
-    return {
+    var entry = {
       tenant: 'test0',
       type: extension.type || 'ss',
       date: extension.date || '2016-01-01T00:00:00.000Z',
@@ -52,6 +52,10 @@ module.exports = {
       strategy_type: 'database',
       auth0_client: { data: 'client'}
     };
+    if (extension.id) {
+      entry.id = extension.id;
+    }
+    return entry;
   }
 
 };

@@ -25,8 +25,8 @@ describe('GET /logs?{username}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'user1', date: '2016-02-22T00:00:00.000Z' })
+          buildLogEntry({ id: "1", user_name: 'user1', type: 's', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "2", user_name: 'user1', date: '2016-02-22T00:00:00.000Z' })
         ]);
         done(err);
       });

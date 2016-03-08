@@ -26,9 +26,9 @@ describe('GET /logs?{user_agent}', function() {
         expect(res.body).to.eql({
           start: 0, limit: 3, length: 3, total: 3,
           logs: [
-            buildLogEntry({ user_agent: 'Chrome Mac', date: '2016-02-23T00:00:00.000Z' }),
-            buildLogEntry({ user_agent: 'Chrome Windows', date: '2016-02-21T00:00:00.000Z' }),
-            buildLogEntry({ user_agent: 'Chrome Mac', date: '2016-02-20T00:00:00.000Z' })
+            buildLogEntry({ id: "1", user_agent: 'Chrome Mac', date: '2016-02-23T00:00:00.000Z' }),
+            buildLogEntry({ id: "3", user_agent: 'Chrome Windows', date: '2016-02-21T00:00:00.000Z' }),
+            buildLogEntry({ id: "4", user_agent: 'Chrome Mac', date: '2016-02-20T00:00:00.000Z' })
           ]
         });
         done(err);

@@ -26,9 +26,9 @@ describe('GET /logs?{sort,mode}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'c', date: '2016-02-19T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
+          buildLogEntry({ id: "1", user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "5", user_name: 'c', date: '2016-02-19T00:00:00.000Z' }),
+          buildLogEntry({ id: "4", user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -41,9 +41,9 @@ describe('GET /logs?{sort,mode}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'c', date: '2016-02-19T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
+          buildLogEntry({ id: "1", user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "5", user_name: 'c', date: '2016-02-19T00:00:00.000Z' }),
+          buildLogEntry({ id: "4", user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -55,9 +55,9 @@ describe('GET /logs?{sort,mode}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'a', date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'b', date: '2016-02-20T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'c', date: '2016-02-19T00:00:00.000Z' })
+          buildLogEntry({ id: "2", user_name: 'a', date: '2016-02-22T00:00:00.000Z' }),
+          buildLogEntry({ id: "4", user_name: 'b', date: '2016-02-20T00:00:00.000Z' }),
+          buildLogEntry({ id: "5", user_name: 'c', date: '2016-02-19T00:00:00.000Z' })
         ]);
         done(err);
       });
@@ -85,9 +85,9 @@ describe('GET /logs?{sort,mode}', function() {
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 3, total: 4 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'a', date: '2016-02-22T00:00:00.000Z' }),
-          buildLogEntry({ user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
+          buildLogEntry({ id: "1", user_name: 'd', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ id: "2", user_name: 'a', date: '2016-02-22T00:00:00.000Z' }),
+          buildLogEntry({ id: "4", user_name: 'b', date: '2016-02-20T00:00:00.000Z' })
         ]);
         done(err);
       });

@@ -95,7 +95,11 @@ function getEntriesByField(req, res) {
         total: data.hits.total,
         length: data.hits.hits.length,
         limit: options.pagination.pageSize,
-        logs: data.hits.hits.map(h => h._source)
+        logs: data.hits.hits.map(hit => {
+          var output = { id: hit._id };
+          Object.assign(output, hit._source);
+          return output;
+        })
       });
     })
     .catch(function(err) {
