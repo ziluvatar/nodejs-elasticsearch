@@ -6,7 +6,8 @@
     "host": "http://localhost:9200",
     "log": "error",
     "index": "logs",
-    "type": "entry"
+    "type": "entry",
+    "maxSockets": 100
   },
   "api": {
     "pageSize": 10

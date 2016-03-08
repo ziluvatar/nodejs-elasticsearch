@@ -2,9 +2,12 @@
   "name": "logs-api",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "app.js",
   "scripts": {
+    "prestart": "node ./scripts/create-es-index.js",
     "start": "node app.js",
+    "pretest": "NODE_ENV=test node ./scripts/create-es-index.js",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec test/**"
   },
   "dependencies": {
@@ -22,5 +25,8 @@
     "jsonwebtoken": "5.7.0",
     "mocha": "2.4.5",
     "supertest": "1.2.0"
+  },
+  "engines" : {
+    "node" : ">=4.3.2"
   }
 }
