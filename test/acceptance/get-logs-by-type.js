@@ -4,14 +4,14 @@ var store = require('../util/store');
 var buildLogEntry = store.buildEntry;
 
 
-describe('GET /logs?{user_id}', function() {
+describe('GET /logs?{type}', function() {
 
   beforeEach(function (done) {
     store.save([
-      buildLogEntry({ user_id: 'u1', date: '2016-02-21T00:00:00.000Z' }),
-      buildLogEntry({ user_id: 'u1', date: '2016-02-22T00:00:00.000Z', client_id: "anotherClientId" }),
-      buildLogEntry({ user_id: 'u1', date: '2016-02-23T00:00:00.000Z' }),
-      buildLogEntry({ user_id: 'u2', date: '2016-02-24T00:00:00.000Z' })
+      buildLogEntry({ type: 'ss', date: '2016-02-23T00:00:00.000Z' }),
+      buildLogEntry({ type: 's',  date: '2016-02-22T00:00:00.000Z' }),
+      buildLogEntry({ type: 'ss', date: '2016-02-21T00:00:00.000Z', client_id: "anotherClientId" }),
+      buildLogEntry({ type: 'ss', date: '2016-02-20T00:00:00.000Z' })
     ], done);
   });
 
@@ -19,21 +19,21 @@ describe('GET /logs?{user_id}', function() {
     store.drop(done);
   });
 
-  it('returns client entries searching by user_id when it exists', function(done) {
-    request.validGet('/logs?user_id=u1')
+  it('returns client entries searching by type when it exists', function(done) {
+    request.validGet('/logs?type=ss')
       .end(function(err, res){
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 2, total: 2 });
         expect(res.body).to.have.property('logs').and.deep.equal([
-          buildLogEntry({ user_id: 'u1', date: '2016-02-23T00:00:00.000Z' }),
-          buildLogEntry({ user_id: 'u1', date: '2016-02-21T00:00:00.000Z' })
+          buildLogEntry({ type: 'ss', date: '2016-02-23T00:00:00.000Z' }),
+          buildLogEntry({ type: 'ss', date: '2016-02-20T00:00:00.000Z' })
         ]);
         done(err);
       });
   });
 
-  it('does not return entries by user_id when there are not logs for that user', function(done) {
-    request.validGet('/logs?user_id=u0')
+  it('does not return entries by type when there are not logs for that type', function(done) {
+    request.validGet('/logs?type=scp')
       .end(function(err, res){
         expect(err).to.be.null;
         expect(res.body).to.include({ start: 0, limit: 3, length: 0, total: 0 });
@@ -43,7 +43,7 @@ describe('GET /logs?{user_id}', function() {
   });
 
   it('returns 401 http error code when there is a problem with the JWT used', function(done) {
-    request.unauthorizedGet('/logs?user_id=u1').end(done);
+    request.unauthorizedGet('/logs?type=ss').end(done);
   });
 
 });

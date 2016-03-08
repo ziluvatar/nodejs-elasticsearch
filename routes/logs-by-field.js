@@ -7,10 +7,11 @@ var BodyBuilder = require('bodybuilder');
 var validator = require('../support/validator');
 
 const apiDateFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
-const apiSortFields = ['date','user_name','connection','user_id','ip','client_name'];
+const apiSortFields = ['date','type','user_name','connection','user_id','ip','client_name'];
 const apiSortModes = ['asc','desc'];
 
 const fieldsMapping = {
+  type: 'type',
   user_name: 'user_name',
   connection: 'connection',
   user_id: 'user_id',
@@ -38,7 +39,8 @@ function buildOptions(req) {
     user_name: req.query.user_name,
     connection: req.query.connection,
     user_id: req.query.user_id,
-    ip: req.query.ip
+    ip: req.query.ip,
+    type: req.query.type
   };
   if (req.query.fields) {
     var fieldList = req.query.fields.split(',');

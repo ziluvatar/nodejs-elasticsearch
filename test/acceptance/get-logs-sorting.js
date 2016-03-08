@@ -69,7 +69,7 @@ describe('GET /logs?{sort,mode}', function() {
         expect(err).to.be.null;
         expect(res.body).to.have.property('errors').and.deep.equal([
           { code: 'invalid.param.sort',
-            message: 'sort fields: date, user_name, connection, user_id, ip, client_name',
+            message: 'sort fields: date, type, user_name, connection, user_id, ip, client_name',
             value: 'detail' },
           { code: 'invalid.param.mode',
             message: 'sort modes allowed: asc, desc',
