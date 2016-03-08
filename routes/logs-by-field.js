@@ -10,7 +10,7 @@ const apiDateFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
 const apiSortFields = ['date','type','user_name','connection','user_id','ip','client_name'];
 const apiSortModes = ['asc','desc'];
 
-const fieldsMapping = {
+const filterFieldsMapping = {
   type: 'type',
   user_name: 'user_name',
   connection: 'connection',
@@ -40,7 +40,8 @@ function buildOptions(req) {
     connection: req.query.connection,
     user_id: req.query.user_id,
     ip: req.query.ip,
-    type: req.query.type
+    type: req.query.type,
+    user_agent: req.query.user_agent
   };
   if (req.query.fields) {
     var fieldList = req.query.fields.split(',');
@@ -110,17 +111,21 @@ function buildESQuery(options) {
     .from(options.pagination.start)
     .sort(options.sort.field, options.sort.mode);
 
-  for (var field in fieldsMapping) {
-    if (fieldsMapping.hasOwnProperty(field) && options[field] !== undefined) {
-      bodyBuilder = bodyBuilder.filter('term', fieldsMapping[field], options[field]);
+  for (var field in filterFieldsMapping) {
+    if (filterFieldsMapping.hasOwnProperty(field) && options[field] !== undefined) {
+      bodyBuilder.filter('term', filterFieldsMapping[field], options[field]);
     }
   }
 
   if (options.period.from !== undefined) {
-    bodyBuilder = bodyBuilder.filter('range', 'date', { "gte" : options.period.from });
+    bodyBuilder.filter('range', 'date', { "gte" : options.period.from });
   }
   if (options.period.to !== undefined) {
-    bodyBuilder = bodyBuilder.filter('range', 'date', { "lte" : options.period.to });
+    bodyBuilder.filter('range', 'date', { "lte" : options.period.to });
+  }
+
+  if (options.user_agent !== undefined) {
+    bodyBuilder.query('match', 'user_agent', options.user_agent);
   }
 
   return bodyBuilder.build();
