@@ -38,3 +38,9 @@ You can see the API documentation here: http://docs.logseduardods.apiary.io
 # Technical Notes
 
 * API using express
+* Authorization using expres-jwt
+* Express-validator to check the format of some query parameters
+* Winston and Morgan for logging
+* Script to create index & mapping in elasticsearch (if needed) when you execute tests or run the server.
+  It is executed automatically on `pretest` and `prestart` phases.
+* Script to populate database `scripts/create-es-content.js`, you need to have set the `AUTH0_CLIENT_ID` environment variable previously before you run it
