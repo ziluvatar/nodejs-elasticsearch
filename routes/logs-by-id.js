@@ -1,17 +1,10 @@
-var config = require('config');
-var esClient = require('../support/es-client');
-var esIndex = config.get('elasticsearch.index');
-var esType = config.get('elasticsearch.type');
+var esLogSearcher = require('../elasticsearch/es-logs');
 
 function getEntryById(req, res) {
   function getResolve(data) {
-    if (data._source.client_id === req.user.aud) {
-      var output = { id: data._id };
-      Object.assign(output, data._source);
-      res.json(output);
-    } else {
-      res.sendStatus(404);
-    }
+    var output = { id: data._id };
+    Object.assign(output, data._source);
+    res.json(output);
   }
 
   function getReject(err) {
@@ -23,11 +16,12 @@ function getEntryById(req, res) {
     }
   }
 
-  esClient
-    .get({
-      index: esIndex,
-      type: esType,
-      id: req.params.id
+  esLogSearcher
+    .getById({
+      id: req.params.id,
+      security: {
+        client_id: req.user.aud
+      }
     })
     .then(getResolve)
     .catch(getReject);
