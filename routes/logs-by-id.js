@@ -1,4 +1,5 @@
 var esLogSearcher = require('../elasticsearch/es-logs');
+var logger = require('../support/logger');
 
 function getEntryById(req, res) {
   function getResolve(data) {
@@ -12,7 +13,7 @@ function getEntryById(req, res) {
       res.sendStatus(err.status);
     } else {
       res.sendStatus(500);
-      console.error(err);
+      logger.error(err);
     }
   }
 

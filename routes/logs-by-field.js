@@ -2,6 +2,7 @@ var config = require('config');
 var pageSize = config.get('api.pageSize');
 var validator = require('../support/validator');
 var esLogSearcher = require('../elasticsearch/es-logs');
+var logger = require('../support/logger');
 
 const apiDateFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
 const apiSortFields = ['date','type','user_name','connection','user_id','ip','client_name'];
@@ -20,7 +21,7 @@ function getEntriesByField(req, res) {
     .then(sendJsonData)
     .catch(function (err) {
       res.sendStatus(500);
-      return console.error(err);
+      return logger.error(err);
     });
 
   function sendJsonData(data) {
